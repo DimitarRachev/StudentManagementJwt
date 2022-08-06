@@ -23,8 +23,9 @@ public class StudentManagmentRestApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/login").allowedOrigins("http://localhost:4200");
-                registry.addMapping("/students").allowedOrigins("http//localhost:4200/students").allowedOrigins("http//localhost:4200");
+                registry.addMapping("/*").allowedOrigins("http://localhost:4200")
+                        .allowedHeaders("*")
+                        .allowedMethods("*");
             }
         };
     }

@@ -1,6 +1,8 @@
 package com.example.studentmanagmentrest.auth.configuration;
 
-import com.example.studentmanagmentrest.filter.JwtRequestFilter;
+import com.example.studentmanagmentrest.filter.CustomAuthenticationFilter;
+
+import com.example.studentmanagmentrest.filter.CustomAuthorizationFilter;
 import com.example.studentmanagmentrest.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,34 +25,38 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
-    private final JwtRequestFilter jwtRequestFilter;
 
-    public SecurityConfig(PasswordEncoder passwordEncoder, UserService userService, JwtRequestFilter jwtRequestFilter) {
+
+    public SecurityConfig(PasswordEncoder passwordEncoder, UserService userService ) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
-        this.jwtRequestFilter = jwtRequestFilter;
+
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .cors().disable()
+                .cors()
+                .and()
                 .authorizeRequests()
                 .antMatchers("/generate")
                 .permitAll()
-                .antMatchers("/login")
+                .antMatchers("/login", "/refreshToken")
                 .permitAll()
                 .antMatchers("/*")
                 .authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
+        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
+
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
         auth.authenticationProvider(daoAuthenticationProvider());
     }
 

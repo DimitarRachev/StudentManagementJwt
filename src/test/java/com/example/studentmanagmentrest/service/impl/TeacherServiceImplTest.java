@@ -4,6 +4,7 @@ import com.example.studentmanagmentrest.repository.TeacherRepository;
 import com.example.studentmanagmentrest.service.TeacherService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -12,11 +13,12 @@ import static org.mockito.Mockito.when;
 class TeacherServiceImplTest {
     TeacherRepository mockedTeacherRepository;
     TeacherService teacherService;
+    ModelMapper mapper = new ModelMapper();
 
     @BeforeEach
     void setUp() {
         mockedTeacherRepository = mock(TeacherRepository.class);
-        teacherService = new TeacherServiceImpl(mockedTeacherRepository);
+        teacherService = new TeacherServiceImpl(mockedTeacherRepository, mapper);
     }
 
     @Test

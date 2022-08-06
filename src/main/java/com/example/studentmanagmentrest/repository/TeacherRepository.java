@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -36,4 +37,6 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     void deleteAllByDeletedTrue();
 
     Optional<UserEntity> findByUsernameAndDeletedFalse(String username);
+
+    List<Teacher> findAllByDeletedFalse();
 }

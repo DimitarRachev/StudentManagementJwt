@@ -3,6 +3,7 @@ package com.example.studentmanagmentrest.service;
 
 
 import com.example.studentmanagmentrest.model.dto.StudentDto;
+import com.example.studentmanagmentrest.model.dto.StudentWithAgeDto;
 import com.example.studentmanagmentrest.model.entity.Course;
 import com.example.studentmanagmentrest.model.entity.Student;
 
@@ -36,4 +37,6 @@ public interface StudentService {
     Set<Student> getForDeletion();
 
     List<StudentDto> getAllDto();
+
+    List<StudentWithAgeDto> getAllWithAge();
 }

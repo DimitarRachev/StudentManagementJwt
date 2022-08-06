@@ -2,6 +2,8 @@ package com.example.studentmanagmentrest.service;
 
 
 import com.example.studentmanagmentrest.model.dto.StudentDto;
+import com.example.studentmanagmentrest.model.dto.StudentWithAgeDto;
+import com.example.studentmanagmentrest.model.dto.TeacherDto;
 import com.example.studentmanagmentrest.utility.Message;
 import com.example.studentmanagmentrest.utility.dbInitializer.Initializer;
 import com.example.studentmanagmentrest.model.entity.Course;
@@ -15,6 +17,8 @@ import com.example.studentmanagmentrest.utility.DtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -200,6 +204,14 @@ public class DBFacade {
     }
 
     public List<StudentDto> getAllStudents() {
-      return  studentService.getAllDto();
+        return studentService.getAllDto();
+    }
+
+    public Page<TeacherDto> getAllTeachers(int page, int size, Sort.Direction order, String sortField) {
+        return teacherService.getAllTeachers(page, size, order, sortField);
+    }
+
+    public List<StudentWithAgeDto> getAllWithAge() {
+        return studentService.getAllWithAge();
     }
 }

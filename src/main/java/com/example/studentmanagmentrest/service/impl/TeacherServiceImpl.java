@@ -1,21 +1,32 @@
 package com.example.studentmanagmentrest.service.impl;
 
 
+import com.example.studentmanagmentrest.model.dto.TeacherDto;
 import com.example.studentmanagmentrest.model.entity.Teacher;
 import com.example.studentmanagmentrest.repository.TeacherRepository;
 import com.example.studentmanagmentrest.service.TeacherService;
+import com.example.studentmanagmentrest.utility.DtoConverter;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TeacherServiceImpl implements TeacherService {
     private final TeacherRepository teacherRepository;
+    private final ModelMapper mapper;
 
     @Autowired
-    public TeacherServiceImpl(TeacherRepository teacherRepository) {
+    public TeacherServiceImpl(TeacherRepository teacherRepository, ModelMapper mapper) {
         this.teacherRepository = teacherRepository;
+        this.mapper = mapper;
     }
 
     @Override
@@ -78,5 +89,14 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public void save(Teacher teacher) {
         teacherRepository.save(teacher); //
+    }
+
+    @Override
+    public Page<TeacherDto> getAllTeachers(int page, int size, Sort.Direction order, String sortField) {
+        Pageable pageable = PageRequest.of(page, size, order, sortField);
+        Page<Teacher> all = teacherRepository.findAll(pageable);
+        Page<TeacherDto> map = all.map(DtoConverter::makeTeacherDto);
+        map.forEach(t -> System.out.println(t.getName() + " " + t.getDegree()));
+        return map;
     }
 }
