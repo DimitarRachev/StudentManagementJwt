@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.studentmanagmentrest.service.DBFacade;
 import com.example.studentmanagmentrest.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,13 +40,14 @@ public class HomeRestController {
     private final DBFacade dbFacade;
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
+    Gson gson;
 
 
     public HomeRestController(DBFacade dbFacade, AuthenticationManager authenticationManager, UserService userService) {
         this.dbFacade = dbFacade;
         this.authenticationManager = authenticationManager;
         this.userService = userService;
-
+        this.gson = new Gson();
     }
 
     @PostMapping("/generate")
@@ -76,12 +78,13 @@ public class HomeRestController {
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refreshToken);
                 String username = decodedJWT.getSubject();
-
+                Date refreshExpiresAt = decodedJWT.getExpiresAt();
                 UserDetails user = userService.loadUserByUsername(username);
 
+                Date accessExpiresAt = new Date(System.currentTimeMillis() + 10 * 60 * 1000);
                 String accessToken = JWT.create()
                         .withSubject(user.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                        .withExpiresAt(accessExpiresAt)
                         .withIssuer(request.getRequestURL().toString())
                         .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                         .sign(algorithm);
@@ -99,7 +102,9 @@ public class HomeRestController {
 
                 Map<String, String> tockens = new HashMap<>();
                 tockens.put("access_token", accessToken);
+                tockens.put("access_expires_at", gson.toJson( accessExpiresAt));
                 tockens.put("refresh_token", refreshToken);
+                tockens.put("refresh_expires_at", gson.toJson(refreshExpiresAt));
 
                 response.setContentType(APPLICATION_JSON_VALUE);
                 new ObjectMapper().writeValue(response.getOutputStream(), tockens);
