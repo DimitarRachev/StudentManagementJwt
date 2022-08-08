@@ -2,6 +2,7 @@ package com.example.studentmanagmentrest.service.impl;
 
 
 import com.example.studentmanagmentrest.model.dto.StudentDto;
+import com.example.studentmanagmentrest.model.dto.StudentWithAgeDto;
 import com.example.studentmanagmentrest.utility.Message;
 import com.example.studentmanagmentrest.model.entity.Course;
 import com.example.studentmanagmentrest.model.entity.Grade;
@@ -121,5 +122,11 @@ public class StudentServiceImpl implements StudentService {
         return students.stream()
                 .map(s -> mapper.map(s, StudentDto.class))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<StudentWithAgeDto> getAllWithAge() {
+        List<Student> students = studentRepository.getByDeletedFalse();
+        return students.stream().map(s -> mapper.map(s, StudentWithAgeDto.class)).collect(Collectors.toList());
     }
 }

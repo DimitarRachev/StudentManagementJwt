@@ -1,9 +1,11 @@
 package com.example.studentmanagmentrest.controller;
 
 import com.example.studentmanagmentrest.model.dto.StudentDto;
+import com.example.studentmanagmentrest.model.dto.StudentWithAgeDto;
 import com.example.studentmanagmentrest.service.DBFacade;
 import com.example.studentmanagmentrest.model.binding.BindingStudentDto;
 import com.example.studentmanagmentrest.utility.ResponseMaker;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("students")
 public class StudentRestController {
     private final DBFacade dbFacade;
@@ -54,9 +57,14 @@ public class StudentRestController {
     }
 
     @GetMapping
-    @CrossOrigin(origins = "http://localhost:4200")
     public ResponseEntity<List<StudentDto>> getAllStudents() {
         List<StudentDto> students = dbFacade.getAllStudents();
+        return ResponseEntity.ok(students);
+    }
+
+    @GetMapping("/withAge")
+    public ResponseEntity<List<StudentWithAgeDto>> getStudentsWithAge() {
+        List<StudentWithAgeDto> students = dbFacade.getAllWithAge();
         return ResponseEntity.ok(students);
     }
 }

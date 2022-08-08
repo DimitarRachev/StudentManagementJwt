@@ -2,7 +2,10 @@ package com.example.studentmanagmentrest.service;
 
 
 
+import com.example.studentmanagmentrest.model.dto.TeacherDto;
 import com.example.studentmanagmentrest.model.entity.Teacher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -25,4 +28,6 @@ public interface TeacherService {
     boolean purge();
 
     void save(Teacher teacher);
+
+    Page<TeacherDto> getAllTeachers(int page, int size, Sort.Direction order, String sortField);
 }

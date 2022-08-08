@@ -8,6 +8,7 @@ import com.example.studentmanagmentrest.repository.StudentRepository;
 import com.example.studentmanagmentrest.service.StudentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.modelmapper.ModelMapper;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ class StudentServiceImplTest {
     StudentRepository mockedStudentRepository;
     GradeRepository mockedGradeRepository;
     StudentService studentService;
+    ModelMapper mapper = new ModelMapper();
 
     @BeforeEach
     void setUp() {
