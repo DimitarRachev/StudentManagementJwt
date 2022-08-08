@@ -66,9 +66,9 @@ public class CourseServiceImpl implements CourseService {
         if (students.contains(student)) {
             return "Student " + studentName + " is already enrolled in course " + courseName + ".";
         }
-//        course.getStudents().add(student);
+        course.getStudents().add(student);
         student.getCourses().add(course);
-//        courseRepository.save(course);
+        courseRepository.save(course);
         studentRepository.save(student);
         return " Student " + studentName + " successfully enrolled in course " + courseName + ".";
     }
@@ -115,7 +115,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-  public  boolean courseExists(String name) {
+    public  boolean courseExists(String name) {
         return courseRepository.existsByNameAndDeletedFalse(name);
     }
 

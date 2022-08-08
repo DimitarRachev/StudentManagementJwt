@@ -95,7 +95,8 @@ public class TeacherServiceImpl implements TeacherService {
     public Page<TeacherDto> getAllTeachers(int page, int size, Sort.Direction order, String sortField) {
         Pageable pageable = PageRequest.of(page, size, order, sortField);
         Page<Teacher> all = teacherRepository.findAll(pageable);
-        Page<TeacherDto> map = all.map(DtoConverter::makeTeacherDto);
+        Page<Teacher> all1 = teacherRepository.findAllByDeletedFalse(pageable);
+        Page<TeacherDto> map = all1.map(DtoConverter::makeTeacherDto);
         map.forEach(t -> System.out.println(t.getName() + " " + t.getDegree()));
         return map;
     }

@@ -6,13 +6,13 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.studentmanagmentrest.service.DBFacade;
 import com.example.studentmanagmentrest.service.UserService;
+import com.example.studentmanagmentrest.utility.TokenGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,7 +28,6 @@ import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -40,13 +39,18 @@ public class HomeRestController {
     private final DBFacade dbFacade;
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
-    Gson gson;
+    private final TokenGenerator tokenGenerator;
+    Gson gson ;
 
 
-    public HomeRestController(DBFacade dbFacade, AuthenticationManager authenticationManager, UserService userService) {
+    public HomeRestController(DBFacade dbFacade,
+                              AuthenticationManager authenticationManager,
+                              UserService userService,
+                              TokenGenerator tokenGenerator) {
         this.dbFacade = dbFacade;
         this.authenticationManager = authenticationManager;
         this.userService = userService;
+        this.tokenGenerator = tokenGenerator;
         this.gson = new Gson();
     }
 
@@ -64,7 +68,7 @@ public class HomeRestController {
     @DeleteMapping("/purge")
     public ResponseEntity<String> purgeDB() {
         String response = dbFacade.purgeAll();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return new ResponseEntity<>(gson.toJson(response), HttpStatus.OK);
     }
 
     @GetMapping("/refreshToken")
@@ -80,24 +84,15 @@ public class HomeRestController {
                 String username = decodedJWT.getSubject();
                 Date refreshExpiresAt = decodedJWT.getExpiresAt();
                 UserDetails user = userService.loadUserByUsername(username);
+                Date accessExpiresAt = new Date(System.currentTimeMillis() + 1 * 60 * 1000);
+                String accessToken = tokenGenerator.makeAccessToken(user, request, algorithm, accessExpiresAt);
+                //check for expiration and provide new refresh token if close to expiration
 
-                Date accessExpiresAt = new Date(System.currentTimeMillis() + 10 * 60 * 1000);
-                String accessToken = JWT.create()
-                        .withSubject(user.getUsername())
-                        .withExpiresAt(accessExpiresAt)
-                        .withIssuer(request.getRequestURL().toString())
-                        .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                        .sign(algorithm);
-                //TODO maybe check for expiration and provide new refresh token if close to expiration?
-//                Date expiresAt = decodedJWT.getExpiresAt();
-//                Duration TTL = Duration.between(new Date().toInstant(), expiresAt.toInstant());
-//                if (TTL.getSeconds() < 15 * 60) {
-//                    refreshToken = JWT.create()
-//                            .withSubject(user.getUsername())
-//                            .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
-//                            .withIssuer(request.getRequestURL().toString())
-//                            .sign(algorithm);
-//                }
+                Duration RefreshTimeToLive = Duration.between(new Date().toInstant(), refreshExpiresAt.toInstant());
+                if (RefreshTimeToLive.getSeconds() < 30 * 60) {
+                    refreshExpiresAt = new Date(System.currentTimeMillis() + 120 * 60 * 1000);
+                    refreshToken = tokenGenerator.makeRefreshToken(user, request, algorithm, refreshExpiresAt);
+                }
 
 
                 Map<String, String> tockens = new HashMap<>();
@@ -118,7 +113,23 @@ public class HomeRestController {
                 new ObjectMapper().writeValue(response.getOutputStream(), error);
             }
         } else {
-            throw new RuntimeException("Refresh token is missing or expired!");
+            throw new RuntimeException("Refresh token is missing!");
         }
     }
+
+
+    //TODO Scrap that end poin, becouse it's not used any more
+//    @PostMapping("/login")
+//    public ResponseEntity login(@RequestBody AuthenticationRequest request) {
+//        Gson gson = new Gson();
+//        try {
+//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+//        } catch (BadCredentialsException e) {
+//            return  new ResponseEntity<>("Invalid username or password!", HttpStatus.BAD_REQUEST);
+//        }
+//
+//        final UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
+//
+//        return  new ResponseEntity<>(HttpStatus.OK);
+//    }
 }

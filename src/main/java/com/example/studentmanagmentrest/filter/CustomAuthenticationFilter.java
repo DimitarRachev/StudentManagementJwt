@@ -3,6 +3,7 @@ package com.example.studentmanagmentrest.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.studentmanagmentrest.model.AuthenticationRequest;
+import com.example.studentmanagmentrest.utility.TokenGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,10 +29,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final TokenGenerator tokenGenerator;
     private final Gson gson;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, TokenGenerator tokenGenerator) {
         this.authenticationManager = authenticationManager;
+        this.tokenGenerator = tokenGenerator;
         gson = new Gson();
     }
 
@@ -39,9 +42,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 
         try {
-            AuthenticationRequest json = gson.fromJson(request.getReader(), AuthenticationRequest.class);
+//            Used if username/password are send as headers
 //            String username = request.getParameter("username");
 //            String password = request.getParameter("password");
+            AuthenticationRequest json = gson.fromJson(request.getReader(), AuthenticationRequest.class);
             String username = json.getUsername();
             String password = json.getPassword();
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
@@ -64,20 +68,11 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 
         Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
         Date accessExpiresAt = new Date(System.currentTimeMillis() + 10 * 60 * 1000);
-        String accessToken = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(accessExpiresAt)
-                .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .sign(algorithm);
+        String accessToken =  tokenGenerator.makeAccessToken(user, request, algorithm, accessExpiresAt);
 
-        Date refreshExpiresAt = new Date(System.currentTimeMillis() + 30 * 60 * 1000);
-        String refreshToken = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(refreshExpiresAt)
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
 
+        Date refreshExpiresAt = new Date(System.currentTimeMillis() + 120 * 60 * 1000);
+        String refreshToken = tokenGenerator.makeRefreshToken(user, request, algorithm, refreshExpiresAt);
 
         Map<String, String> tockens = new HashMap<>();
         tockens.put("access_token", accessToken);
