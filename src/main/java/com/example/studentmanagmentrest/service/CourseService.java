@@ -2,9 +2,9 @@ package com.example.studentmanagmentrest.service;
 
 
 
+import com.example.studentmanagmentrest.model.dto.CourseDto;
 import com.example.studentmanagmentrest.model.entity.Course;
 import com.example.studentmanagmentrest.model.entity.Teacher;
-import com.example.studentmanagmentrest.model.dto.CourseDto;
 
 import java.util.List;
 import java.util.Set;

@@ -1,15 +1,15 @@
 package com.example.studentmanagmentrest.service.impl;
 
 
-import com.example.studentmanagmentrest.service.CourseService;
-import com.example.studentmanagmentrest.utility.Message;
+import com.example.studentmanagmentrest.model.dto.CourseDto;
 import com.example.studentmanagmentrest.model.entity.Course;
 import com.example.studentmanagmentrest.model.entity.Student;
 import com.example.studentmanagmentrest.model.entity.Teacher;
 import com.example.studentmanagmentrest.repository.CourseRepository;
 import com.example.studentmanagmentrest.repository.StudentRepository;
 import com.example.studentmanagmentrest.repository.TeacherRepository;
-import com.example.studentmanagmentrest.model.dto.CourseDto;
+import com.example.studentmanagmentrest.service.CourseService;
+import com.example.studentmanagmentrest.utility.Message;
 import com.example.studentmanagmentrest.utility.DtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

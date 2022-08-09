@@ -1,21 +1,7 @@
 package com.example.studentmanagmentrest.enumeration;
 
-import com.google.common.collect.Sets;
-
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.Set;
-
-import static com.example.studentmanagmentrest.enumeration.UserPermission.COURSE_READ;
-import static com.example.studentmanagmentrest.enumeration.UserPermission.COURSE_WRITE;
-import static com.example.studentmanagmentrest.enumeration.UserPermission.DATABASE_WRITE;
-import static com.example.studentmanagmentrest.enumeration.UserPermission.GRADE_READ;
-import static com.example.studentmanagmentrest.enumeration.UserPermission.GRADE_WRITE;
-import static com.example.studentmanagmentrest.enumeration.UserPermission.STUDENT_READ;
-import static com.example.studentmanagmentrest.enumeration.UserPermission.STUDENT_WRITE;
-import static com.example.studentmanagmentrest.enumeration.UserPermission.TEACHER_READ;
-import static com.example.studentmanagmentrest.enumeration.UserPermission.TEACHER_WRITE;
 
 public enum UserRole {
 //    STUDENT(Sets.newHashSet(STUDENT_READ, GRADE_READ)),

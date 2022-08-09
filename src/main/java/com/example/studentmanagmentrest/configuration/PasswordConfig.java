@@ -1,4 +1,4 @@
-package com.example.studentmanagmentrest.auth.configuration;
+package com.example.studentmanagmentrest.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

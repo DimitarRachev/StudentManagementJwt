@@ -1,4 +1,4 @@
-package com.example.studentmanagmentrest.auth.configuration;
+package com.example.studentmanagmentrest.configuration;
 
 import com.example.studentmanagmentrest.filter.CustomAuthenticationFilter;
 
