@@ -60,7 +60,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         UserDetails user;
         if (principal instanceof UserDetails) {
             user = (UserDetails) principal;
-            log.info(String.valueOf(user));
         } else {
             throw new RuntimeException("Problem while getting principal from authResult: " + principal);
         }

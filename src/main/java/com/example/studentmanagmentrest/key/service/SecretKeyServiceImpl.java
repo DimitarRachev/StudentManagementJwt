@@ -4,6 +4,7 @@ import com.example.studentmanagmentrest.key.model.SecretKey;
 import com.example.studentmanagmentrest.key.repository.KeyRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -23,14 +24,7 @@ public class SecretKeyServiceImpl implements CommandLineRunner {
 
 
     public static String KeyGen() { //key generator
-        int len = 40;
-        String chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijk"
-                + "lmnopqrstuvwxyz!@#$%&";
-        Random rnd = new Random();
-        StringBuilder sb = new StringBuilder(len);
-        for (int i = 0; i < len; i++)
-            sb.append(chars.charAt(rnd.nextInt(chars.length())));
-        return sb.toString();
+        return RandomStringUtils.randomAlphanumeric(40);
     }
 
 
@@ -45,16 +39,16 @@ public class SecretKeyServiceImpl implements CommandLineRunner {
     }
 
 
-    // @Scheduled(fixedDelay = 5000) //for test purpose only.
+   //  @Scheduled(fixedDelay = 1000) //for test purpose only.
     @Scheduled(cron = "0 59 1 * * ?") //Gen new secret key every day at 01:59
     public void generateNew() {
         if (!repository.findAll().isEmpty()) {
             SecretKey secret = repository.findAll().get(0);
             secret.setKey(KeyGen());
-            log.info(secret.getKey());
+//          log.info(secret.getKey()); //debugging
             repository.save(secret);
             secret.setKey(null);
-            log.info(secret.getKey());
+//          log.info(secret.getKey());  //debugging
 
         }
     }
