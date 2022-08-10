@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.example.studentmanagmentrest.key.repository.KeyRepository;
+import com.example.studentmanagmentrest.key.service.SecretKeyServiceImpl;
 import com.example.studentmanagmentrest.service.UserService;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 public class TokenGenerator {
@@ -26,23 +27,23 @@ public class TokenGenerator {
     private final UserService userService;
 
 
-    private final KeyRepository keyRepository;
+    private final SecretKeyServiceImpl secretKeyServiceImpl;
 
-  private   Algorithm algorithm;
+    private Algorithm algorithm;
     Gson gson;
-//    private final int ACCESS_DURATION = 10 * 60 * 1000;
+    //    private final int ACCESS_DURATION = 10 * 60 * 1000;
     // 30sec duration for testing purposes only
-    private final int ACCESS_DURATION =   30 * 1000;
+    private final int ACCESS_DURATION = 30 * 1000;
     private final int REFRESH_DURATION = 120 * 60 * 1000;
 
-    public TokenGenerator(UserService userService, KeyRepository keyRepository) {
+    public TokenGenerator(UserService userService, SecretKeyServiceImpl secretKeyServiceImpl) {
+        secretKeyServiceImpl.keyGen();
         this.userService = userService;
-        this.keyRepository = keyRepository;
+        this.secretKeyServiceImpl = secretKeyServiceImpl;
 
         gson = new Gson();
-        algorithm = Algorithm.HMAC256(keyRepository.findAll().get(0).getKey().getBytes());
+        algorithm = Algorithm.HMAC256(secretKeyServiceImpl.keyGet().getBytes());
     }
-
 
 
     public String makeAccessToken(UserDetails user,
@@ -90,7 +91,7 @@ public class TokenGenerator {
             refreshExpiresAt = new Date(System.currentTimeMillis() + REFRESH_DURATION);
             refreshToken = makeRefreshToken(user, request, refreshExpiresAt);
         }
-        return  makeTokensMap(accessToken, refreshToken, accessExpiresAt, refreshExpiresAt, user);
+        return makeTokensMap(accessToken, refreshToken, accessExpiresAt, refreshExpiresAt, user);
     }
 
     public Map<String, String> makeTokensMap(String accessToken, String refreshToken,
