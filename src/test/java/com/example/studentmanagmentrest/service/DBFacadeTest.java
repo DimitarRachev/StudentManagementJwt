@@ -5,6 +5,7 @@ import com.example.studentmanagmentrest.model.dto.StudentDtoAvgGrade;
 import com.example.studentmanagmentrest.model.entity.Course;
 import com.example.studentmanagmentrest.model.entity.Grade;
 import com.example.studentmanagmentrest.model.entity.Student;
+import com.example.studentmanagmentrest.school.service.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;

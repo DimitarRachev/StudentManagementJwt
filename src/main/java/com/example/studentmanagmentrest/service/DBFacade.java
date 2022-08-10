@@ -1,19 +1,19 @@
 package com.example.studentmanagmentrest.service;
 
 
-import com.example.studentmanagmentrest.model.dto.StudentDto;
-import com.example.studentmanagmentrest.model.dto.StudentWithAgeDto;
-import com.example.studentmanagmentrest.model.dto.TeacherDto;
-import com.example.studentmanagmentrest.utility.Message;
-import com.example.studentmanagmentrest.utility.dbInitializer.Initializer;
 import com.example.studentmanagmentrest.model.entity.Course;
 import com.example.studentmanagmentrest.model.entity.Grade;
 import com.example.studentmanagmentrest.model.entity.Student;
 import com.example.studentmanagmentrest.model.entity.Teacher;
+import com.example.studentmanagmentrest.model.dto.StudentDto;
+import com.example.studentmanagmentrest.model.dto.StudentWithAgeDto;
+import com.example.studentmanagmentrest.model.dto.TeacherDto;
+import com.example.studentmanagmentrest.utility.DtoConverter;
+import com.example.studentmanagmentrest.utility.dbInitializer.Initializer;
+import com.example.studentmanagmentrest.utility.Message;
 import com.example.studentmanagmentrest.model.dto.CourseDto;
 import com.example.studentmanagmentrest.model.dto.CourseDtoWithGrades;
 import com.example.studentmanagmentrest.model.dto.StudentDtoAvgGrade;
-import com.example.studentmanagmentrest.utility.DtoConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
@@ -31,8 +31,6 @@ import java.util.stream.Collectors;
 
 @Service
 @ComponentScan(basePackages = {"com.example"})
-@EntityScan(basePackages = {"com.example"})
-@EnableJpaRepositories(basePackages = {"com.example"})
 public class DBFacade {
 
     private final StudentService studentService;
