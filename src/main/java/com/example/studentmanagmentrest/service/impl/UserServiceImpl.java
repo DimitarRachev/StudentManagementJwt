@@ -10,6 +10,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -25,9 +27,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity = studentRepository.findByUsernameAndDeletedFalse(username)
-                .orElse(teacherRepository.findByUsernameAndDeletedFalse(username)
-                        .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " not found")));
-        return new User(userEntity);
+        Optional<UserEntity> student = studentRepository.findByUsernameAndDeletedFalse(username);
+        if (student.isPresent()) {
+            return new User(student.get());
+        }
+        Optional<UserEntity> teacher = teacherRepository.findByUsernameAndDeletedFalse(username);
+        if (teacher.isPresent()) {
+            return new User(teacher.get());
+        }
+        throw new UsernameNotFoundException("Username " + username + " not found");
     }
 }
