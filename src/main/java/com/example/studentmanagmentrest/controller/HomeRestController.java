@@ -77,32 +77,9 @@ public class HomeRestController {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String refreshToken = authorizationHeader.substring(7);
-                //TODO make utility method ang hide secret in database
-                Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-                JWTVerifier verifier = JWT.require(algorithm).build();
-                DecodedJWT decodedJWT = verifier.verify(refreshToken);
-                String username = decodedJWT.getSubject();
-                Date refreshExpiresAt = decodedJWT.getExpiresAt();
-                UserDetails user = userService.loadUserByUsername(username);
-                Date accessExpiresAt = new Date(System.currentTimeMillis() + 1 * 60 * 1000);
-                String accessToken = tokenGenerator.makeAccessToken(user, request, algorithm, accessExpiresAt);
-                //check for expiration and provide new refresh token if close to expiration
-
-                Duration RefreshTimeToLive = Duration.between(new Date().toInstant(), refreshExpiresAt.toInstant());
-                if (RefreshTimeToLive.getSeconds() < 30 * 60) {
-                    refreshExpiresAt = new Date(System.currentTimeMillis() + 120 * 60 * 1000);
-                    refreshToken = tokenGenerator.makeRefreshToken(user, request, algorithm, refreshExpiresAt);
-                }
-
-
-                Map<String, String> tockens = new HashMap<>();
-                tockens.put("access_token", accessToken);
-                tockens.put("access_expires_at", gson.toJson( accessExpiresAt));
-                tockens.put("refresh_token", refreshToken);
-                tockens.put("refresh_expires_at", gson.toJson(refreshExpiresAt));
-
+                 Map<String, String> tokens = tokenGenerator.generateRefreshTokens(request, refreshToken);
                 response.setContentType(APPLICATION_JSON_VALUE);
-                new ObjectMapper().writeValue(response.getOutputStream(), tockens);
+                new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 
             } catch (Exception e) {
                 response.setHeader("error", e.getMessage());
@@ -116,20 +93,4 @@ public class HomeRestController {
             throw new RuntimeException("Refresh token is missing!");
         }
     }
-
-
-    //TODO Scrap that end poin, becouse it's not used any more
-//    @PostMapping("/login")
-//    public ResponseEntity login(@RequestBody AuthenticationRequest request) {
-//        Gson gson = new Gson();
-//        try {
-//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-//        } catch (BadCredentialsException e) {
-//            return  new ResponseEntity<>("Invalid username or password!", HttpStatus.BAD_REQUEST);
-//        }
-//
-//        final UserDetails userDetails = userService.loadUserByUsername(request.getUsername());
-//
-//        return  new ResponseEntity<>(HttpStatus.OK);
-//    }
 }

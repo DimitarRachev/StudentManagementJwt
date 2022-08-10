@@ -62,23 +62,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
         } else {
             throw new RuntimeException("Problem while getting principal from authResult: " + principal);
         }
-
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
-        Date accessExpiresAt = new Date(System.currentTimeMillis() + 10 * 60 * 1000);
-        String accessToken =  tokenGenerator.makeAccessToken(user, request, algorithm, accessExpiresAt);
-
-
-        Date refreshExpiresAt = new Date(System.currentTimeMillis() + 120 * 60 * 1000);
-        String refreshToken = tokenGenerator.makeRefreshToken(user, request, algorithm, refreshExpiresAt);
-
-        Map<String, String> tockens = new HashMap<>();
-        tockens.put("access_token", accessToken);
-        tockens.put("access_expires_at", gson.toJson( accessExpiresAt));
-        tockens.put("refresh_token", refreshToken);
-        tockens.put("refresh_expires_at", gson.toJson(refreshExpiresAt));
-
+        Map<String, String> tokens = tokenGenerator.generateTokens(request, user);
         response.setContentType(APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), tockens);
+        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 
     }
 }
