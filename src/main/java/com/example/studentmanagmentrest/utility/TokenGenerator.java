@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.studentmanagmentrest.key.repository.KeyRepository;
 import com.example.studentmanagmentrest.service.UserService;
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 @Service
+@Slf4j
 public class TokenGenerator {
 
 
