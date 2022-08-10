@@ -1,6 +1,5 @@
 package com.example.studentmanagmentrest.databaseConfig;
 
-
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,21 +12,16 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.HashMap;
 
-
-
 @Configuration
 @AllArgsConstructor
 @EnableTransactionManagement
-@EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", transactionManagerRef = "transactionManager",
-        basePackages = "com.example.studentmanagmentrest.repository")
+@EnableJpaRepositories(basePackages = "com.example.studentmanagmentrest.repository")
 public class PrimaryDatabaseConfig {
 
 
@@ -69,9 +63,11 @@ public class PrimaryDatabaseConfig {
 
     public  HashMap<String,Object> propertiesMap(){
         HashMap<String, Object> properties = new HashMap<>();
-        properties.put("hibernate.hbm2ddl.auto", "update");
+        properties.put("hibernate.hbm2ddl.auto", "create");
         properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQLDialect");
         properties.put("hibernate.enable_lazy_load_no_trans",true);
+        properties.put("hibernate.show_sql",true);
+        properties.put("hibernate.format_sql",true);
         return properties;
     }
 

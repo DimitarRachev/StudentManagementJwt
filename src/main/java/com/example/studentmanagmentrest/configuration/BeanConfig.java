@@ -1,5 +1,6 @@
 package com.example.studentmanagmentrest.configuration;
 
+import com.example.studentmanagmentrest.key.repository.KeyRepository;
 import com.example.studentmanagmentrest.utility.TokenGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
