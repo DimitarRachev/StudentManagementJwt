@@ -11,8 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
+
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -24,7 +23,7 @@ import java.util.Map;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
-public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class    CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final TokenGenerator tokenGenerator;
