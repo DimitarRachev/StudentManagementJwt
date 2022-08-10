@@ -1,6 +1,10 @@
 package com.example.studentmanagmentrest.configuration;
 
+
 import com.example.studentmanagmentrest.key.repository.KeyRepository;
+
+import com.example.studentmanagmentrest.service.UserService;
+
 import com.example.studentmanagmentrest.utility.TokenGenerator;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -13,6 +17,11 @@ import java.util.HashMap;
 
 @Configuration
 public class BeanConfig {
+    private final UserService userService;
+
+    public BeanConfig(UserService userService) {
+        this.userService = userService;
+    }
 
     @Bean
     public ModelMapper modelMapper() {
@@ -20,7 +29,7 @@ public class BeanConfig {
     }
 
     @Bean
-    public TokenGenerator tokenGenerator() {return new TokenGenerator();}
+    public TokenGenerator tokenGenerator() {return new TokenGenerator(userService);}
 
     @Bean
     public EntityManagerFactoryBuilder entityManagerFactoryBuilder() {
