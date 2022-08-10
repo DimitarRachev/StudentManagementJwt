@@ -5,6 +5,8 @@ import com.example.studentmanagmentrest.key.repository.KeyRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.Random;
@@ -13,6 +15,7 @@ import java.util.Random;
 @Service
 @AllArgsConstructor
 @Slf4j
+@EnableScheduling
 public class SecretKeyServiceImpl implements CommandLineRunner {
 
 
@@ -43,7 +46,7 @@ public class SecretKeyServiceImpl implements CommandLineRunner {
 
 
     // @Scheduled(fixedDelay = 5000) //for test purpose only.
-   // @Scheduled(cron = "0 59 1 * * ?") //Gen new secret key every day at 01:59
+    @Scheduled(cron = "0 59 1 * * ?") //Gen new secret key every day at 01:59
     public void generateNew() {
         if (!repository.findAll().isEmpty()) {
             SecretKey secret = repository.findAll().get(0);
