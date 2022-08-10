@@ -27,14 +27,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserEntity userEntity;
         Optional<UserEntity> student = studentRepository.findByUsernameAndDeletedFalse(username);
-        if (student.isPresent()) {
-            return new User(student.get());
-        }
         Optional<UserEntity> teacher = teacherRepository.findByUsernameAndDeletedFalse(username);
-        if (teacher.isPresent()) {
-            return new User(teacher.get());
+        if (student.isPresent()) {
+            userEntity = student.get();
+        } else if (teacher.isPresent()) {
+            userEntity = teacher.get();
+        } else {
+            throw new UsernameNotFoundException("Username " + username + " not found");
         }
-        throw new UsernameNotFoundException("Username " + username + " not found");
+        return new User(userEntity);
     }
 }
