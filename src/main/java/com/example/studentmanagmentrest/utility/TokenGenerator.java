@@ -4,10 +4,12 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.studentmanagmentrest.key.repository.KeyRepository;
 import com.example.studentmanagmentrest.service.UserService;
 import com.google.gson.Gson;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.Duration;
@@ -15,8 +17,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-
+@Service
 public class TokenGenerator {
+
+
+    private final UserService userService;
+
+
+    private final KeyRepository keyRepository;
 
   private   Algorithm algorithm;
     Gson gson;
@@ -24,14 +32,16 @@ public class TokenGenerator {
     // 30sec duration for testing purposes only
     private final int ACCESS_DURATION =   30 * 1000;
     private final int REFRESH_DURATION = 120 * 60 * 1000;
-    private final String SECRET = "secret";
-    private final UserService userService;
 
-    public TokenGenerator(UserService userService) {
+    public TokenGenerator(UserService userService, KeyRepository keyRepository) {
         this.userService = userService;
+        this.keyRepository = keyRepository;
+
         gson = new Gson();
-        algorithm = Algorithm.HMAC256(SECRET.getBytes());
+        algorithm = Algorithm.HMAC256(keyRepository.findAll().get(0).getKey().getBytes());
     }
+
+
 
     public String makeAccessToken(UserDetails user,
                                   HttpServletRequest request,

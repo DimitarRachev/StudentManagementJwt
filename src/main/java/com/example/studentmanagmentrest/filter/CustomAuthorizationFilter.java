@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 
 import com.example.studentmanagmentrest.key.model.SecretKey;
 import com.example.studentmanagmentrest.key.repository.KeyRepository;
+import com.example.studentmanagmentrest.utility.TokenGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -53,8 +54,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Autowired
     private TokenGenerator tokenGenerator;
 
-    public CustomAuthorizationFilter() {
-    }
+
 
 
     @Override
