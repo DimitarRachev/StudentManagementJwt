@@ -27,10 +27,11 @@ public class SecretKeyServiceImpl {
 
     public void keyGen() {
         SecretKey secret = new SecretKey();
-        if (repository.findAll().isEmpty())
+        if (repository.findAll().isEmpty()) {
             secret.setKey(KeyGen());
-        repository.save(secret);
-        secret.setKey(null);
+            repository.save(secret);
+            secret.setKey(null);
+        }
     }
 
 
