@@ -38,7 +38,7 @@ public class TokenGenerator {
         this.keyRepository = keyRepository;
 
         gson = new Gson();
-        algorithm = Algorithm.HMAC256(keyRepository.findById(1L).get().getKey().getBytes());
+        algorithm = Algorithm.HMAC256(keyRepository.findAll().get(0).getKey().getBytes());
     }
 
 
