@@ -4,6 +4,7 @@ package com.example.studentmanagmentrest.repository;
 import com.example.studentmanagmentrest.model.entity.Course;
 import com.example.studentmanagmentrest.model.entity.Student;
 import com.example.studentmanagmentrest.model.entity.UserEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +17,8 @@ import java.util.Set;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
+
+    @Autowired
 
 
     List<Student> getByDeletedFalse();
