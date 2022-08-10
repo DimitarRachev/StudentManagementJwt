@@ -54,7 +54,7 @@ public class SecurityConfig  {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean(auth), tokenGenerator));
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(tokenGenerator), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

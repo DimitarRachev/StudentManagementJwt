@@ -17,10 +17,10 @@ import java.util.HashMap;
 
 @Configuration
 public class BeanConfig {
-    private final UserService userService;
 
-    public BeanConfig(UserService userService) {
-        this.userService = userService;
+
+    public BeanConfig() {
+
     }
 
     @Bean
@@ -28,8 +28,8 @@ public class BeanConfig {
         return new ModelMapper();
     }
 
-    @Bean
-    public TokenGenerator tokenGenerator() {return new TokenGenerator(userService);}
+//    @Bean
+//    public TokenGenerator tokenGenerator() {return new TokenGenerator();}
 
     @Bean
     public EntityManagerFactoryBuilder entityManagerFactoryBuilder() {
