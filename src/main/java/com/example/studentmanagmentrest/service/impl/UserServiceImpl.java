@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
+import java.util.Optional;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -35,11 +37,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity userEntity = studentRepository.findByUsernameAndDeletedFalse(username)
-                .orElse(teacherRepository.findByUsernameAndDeletedFalse(username)
-                        .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " not found")));
-        valideteLoginAttempt(userEntity);
 
+        UserEntity userEntity;
+        Optional<UserEntity> student = studentRepository.findByUsernameAndDeletedFalse(username);
+        Optional<UserEntity> teacher = teacherRepository.findByUsernameAndDeletedFalse(username);
+        if (student.isPresent()) {
+            userEntity = student.get();
+        } else if (teacher.isPresent()) {
+            userEntity = teacher.get();
+        } else {
+            throw new UsernameNotFoundException("Username " + username + " not found");
+        }
+        
+        valideteLoginAttempt(userEntity);
         return new User(userEntity);
         }
 
