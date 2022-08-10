@@ -2,15 +2,21 @@ package com.example.studentmanagmentrest;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.example.studentmanagmentrest")
 @EnableWebSecurity
 @Configuration
+
 public class StudentManagmentRestApplication {
 
     public static void main(String[] args) {
@@ -23,8 +29,9 @@ public class StudentManagmentRestApplication {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/login").allowedOrigins("http://localhost:4200");
-                registry.addMapping("/students").allowedOrigins("http//localhost:4200/students").allowedOrigins("http//localhost:4200");
+                registry.addMapping("/*").allowedOrigins("http://localhost:4200")
+                        .allowedHeaders("*")
+                        .allowedMethods("*");
             }
         };
     }

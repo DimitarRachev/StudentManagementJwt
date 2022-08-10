@@ -17,7 +17,6 @@ import java.util.Set;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-
     List<Student> getByDeletedFalse();
 
     List<Student> getAllByCoursesContainingAndDeletedFalse(Course course);

@@ -1,18 +1,18 @@
 package com.example.studentmanagmentrest.controller;
 
 
-import com.example.studentmanagmentrest.service.DBFacade;
+import com.example.studentmanagmentrest.model.binding.CourseBindingDto;
 import com.example.studentmanagmentrest.model.dto.CourseDto;
 import com.example.studentmanagmentrest.model.dto.CourseDtoWithGrades;
 import com.example.studentmanagmentrest.model.dto.StudentDtoAvgGrade;
-import com.example.studentmanagmentrest.model.binding.CourseBindingDto;
+import com.example.studentmanagmentrest.service.DBFacade;
 import com.example.studentmanagmentrest.utility.ResponseMaker;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/courses")
 
 public class CourseRestController {
@@ -53,11 +54,12 @@ public class CourseRestController {
     @PostMapping
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     ResponseEntity<String> addCourse(@RequestBody CourseBindingDto course) {
+        System.out.println(course.getName() +" "+ course.getDuration());
         String response = dbFacade.addNewCourse(course.getName(), course.getDuration());
         return ResponseMaker.makeSaved(response);
     }
 
-    @PatchMapping("/{courseName}/addTeacher/{teacherName}")
+    @PutMapping("/{courseName}/addTeacher/{teacherName}")
     @PreAuthorize("hasAnyRole('MANAGER', 'ADMIN')")
     ResponseEntity<String> addTeacher(@PathVariable String teacherName, @PathVariable String courseName) {
         System.out.println();
@@ -67,7 +69,7 @@ public class CourseRestController {
 
 
 
-    @PatchMapping("/{courseName}/addStudent/{studentName}")
+    @PutMapping("/{courseName}/addStudent/{studentName}")
     @PreAuthorize("hasAnyRole('TEACHER', 'MANAGER', 'ADMIN')")
     ResponseEntity<String> addStudent(@PathVariable String studentName, @PathVariable String courseName) {
         String response = dbFacade.addStudentToCourse(studentName, courseName);
@@ -81,14 +83,14 @@ public class CourseRestController {
         return ResponseMaker.makeSuccess(response);
     }
 
-    @PatchMapping("/{courseName}/removeStudent/{studentName}")
+    @PutMapping("/{courseName}/removeStudent/{studentName}")
     @PreAuthorize("hasAnyRole('TEACHER', 'MANAGER', 'ADMIN')")
     public ResponseEntity<String> removeStudentFromCourse(@PathVariable String studentName, @PathVariable String courseName) {
         String response = dbFacade.removeStudentFromCourse(studentName, courseName);
         return ResponseMaker.makeSuccess(response);
     }
 
-    @PatchMapping
+    @PutMapping
     @PreAuthorize("hasAnyRole( 'MANAGER', 'ADMIN')")
     public ResponseEntity<String> updateCourseDuration(@RequestBody CourseBindingDto course) {
         String response = dbFacade.updateCourseDuration(course.getName(), course.getDuration());

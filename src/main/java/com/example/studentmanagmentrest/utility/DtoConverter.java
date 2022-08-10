@@ -6,6 +6,7 @@ import com.example.studentmanagmentrest.model.entity.Course;
 import com.example.studentmanagmentrest.model.entity.Grade;
 import com.example.studentmanagmentrest.model.entity.Student;
 import com.example.studentmanagmentrest.model.entity.Teacher;
+import com.example.studentmanagmentrest.model.dto.TeacherDto;
 import com.example.studentmanagmentrest.service.GradeService;
 import com.example.studentmanagmentrest.model.dto.CourseDto;
 import com.example.studentmanagmentrest.model.dto.CourseDtoWithGrades;
@@ -62,6 +63,13 @@ public class DtoConverter {
             }
         }
         dto.setStudents(students);
+        return dto;
+    }
+
+    public static TeacherDto makeTeacherDto(Teacher teacher) {
+        TeacherDto dto = new TeacherDto();
+        dto.setName(teacher.getName())
+                .setDegree(teacher.getDegree());
         return dto;
     }
 }
