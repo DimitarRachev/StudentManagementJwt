@@ -13,7 +13,8 @@ public class NameEntity extends BaseEntity {
         return name;
     }
 
-    public void setName(String name) {
+    public NameEntity setName(String name) {
         this.name = name;
+        return this;
     }
 }

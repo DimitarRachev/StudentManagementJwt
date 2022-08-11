@@ -38,9 +38,7 @@ public interface TeacherRepository extends JpaRepository<Teacher, Long> {
     @Transactional
     void deleteAllByDeletedTrue();
 
-    Optional<UserEntity> findByUsernameAndDeletedFalse(String username);
-
-    List<Teacher> findAllByDeletedFalse();
+    Optional<Teacher> findByUsernameOrEmailAndDeletedFalse(String username, String email);
 
     Page<Teacher> findAllByDeletedFalse(Pageable pageable);
 }

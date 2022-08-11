@@ -31,9 +31,9 @@ public class TokenGenerator {
 
     private Algorithm algorithm;
     Gson gson;
-    //    private final int ACCESS_DURATION = 10 * 60 * 1000;
+        private final int ACCESS_DURATION = 10 * 60 * 1000;
     // 30sec duration for testing purposes only
-    private final int ACCESS_DURATION = 30 * 1000;
+//    private final int ACCESS_DURATION = 30 * 1000;
     private final int REFRESH_DURATION = 120 * 60 * 1000;
 
     public TokenGenerator(UserService userService, SecretKeyServiceImpl secretKeyServiceImpl) {

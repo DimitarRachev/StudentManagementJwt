@@ -46,7 +46,7 @@ public class SecurityConfig  {
                 .cors()
                 .and()
                 .authorizeRequests()
-                .antMatchers("/login", "/refreshToken", "/generate")
+                .antMatchers("/login", "/refreshToken", "/generate", "/register", "/register/**" )
                 .permitAll()
                 .antMatchers("/*")
                 .authenticated()
