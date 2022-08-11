@@ -1,5 +1,7 @@
 package com.example.studentmanagmentrest.service.impl;
 
+import com.example.studentmanagmentrest.model.entity.Student;
+import com.example.studentmanagmentrest.model.entity.Teacher;
 import com.example.studentmanagmentrest.model.entity.User;
 import com.example.studentmanagmentrest.model.entity.UserEntity;
 import com.example.studentmanagmentrest.repository.StudentRepository;
@@ -39,14 +41,18 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         UserEntity userEntity;
-        Optional<UserEntity> student = studentRepository.findByUsernameAndDeletedFalse(username);
-        Optional<UserEntity> teacher = teacherRepository.findByUsernameAndDeletedFalse(username);
+        Optional<Student> student = studentRepository.findByUsernameOrEmailAndDeletedFalse(username, username);
+        Optional<Teacher> teacher = teacherRepository.findByUsernameOrEmailAndDeletedFalse(username, username);
         if (student.isPresent()) {
             userEntity = student.get();
         } else if (teacher.isPresent()) {
             userEntity = teacher.get();
         } else {
-            throw new UsernameNotFoundException("Username " + username + " not found");
+            String msg = "Username " + username + " not found";
+            if (username.contains("@")) {
+                msg = "Username with email" + username + " not found";
+            }
+            throw new UsernameNotFoundException(msg);
         }
         
         valideteLoginAttempt(userEntity);

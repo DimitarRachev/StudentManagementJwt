@@ -9,6 +9,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @MappedSuperclass
@@ -39,6 +40,12 @@ public class UserEntity extends NameEntity {
 
     @Column(columnDefinition = "boolean default true")
     boolean isEnabled = true;
+
+    @Column
+    private String registerConfirmToken;
+
+    @Column
+    private LocalDateTime registerTockenExpiratisAt;
 
 
     public String getUsername() {
@@ -77,39 +84,27 @@ public class UserEntity extends NameEntity {
         return this;
     }
 
-    public boolean isAccountNonExpired() {
-        return isAccountNonExpired;
-    }
-
-    public UserEntity setAccountNonExpired(boolean accountNonExpired) {
-        isAccountNonExpired = accountNonExpired;
-        return this;
-    }
-
-    public boolean isAccountNonLocked() {
-        return isAccountNonLocked;
-    }
-
-    public UserEntity setAccountNonLocked(boolean accountNonLocked) {
-        isAccountNonLocked = accountNonLocked;
-        return this;
-    }
-
-    public boolean isCredentialsNonExpired() {
-        return isCredentialsNonExpired;
-    }
-
-    public UserEntity setCredentialsNonExpired(boolean credentialsNonExpired) {
-        isCredentialsNonExpired = credentialsNonExpired;
-        return this;
-    }
-
-    public boolean isEnabled() {
-        return isEnabled;
-    }
 
     public UserEntity setEnabled(boolean enabled) {
         isEnabled = enabled;
+        return this;
+    }
+
+    public String getRegisterConfirmToken() {
+        return registerConfirmToken;
+    }
+
+    public UserEntity setRegisterConfirmToken(String registerConfirmToken) {
+        this.registerConfirmToken = registerConfirmToken;
+        return this;
+    }
+
+    public LocalDateTime getRegisterTockenExpiratisAt() {
+        return registerTockenExpiratisAt;
+    }
+
+    public UserEntity setRegisterTockenExpiratisAt(LocalDateTime registerTockenExpiratisAt) {
+        this.registerTockenExpiratisAt = registerTockenExpiratisAt;
         return this;
     }
 }

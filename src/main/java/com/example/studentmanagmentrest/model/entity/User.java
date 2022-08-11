@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -19,6 +20,10 @@ public class User implements UserDetails {
             .map(p -> new SimpleGrantedAuthority("ROLE_"+p.name()))
             .collect(Collectors.toSet());
     }
+
+    public  boolean isTeacher() {return user instanceof Teacher;}
+    public  boolean isStudent() {return user instanceof Student;}
+
 
     @Override
     public String getPassword() {
@@ -49,4 +54,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return user.isEnabled;
     }
+
+
 }

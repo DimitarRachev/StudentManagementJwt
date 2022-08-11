@@ -44,5 +44,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Set<Student> getByDeletedTrue();
 
-    Optional<UserEntity> findByUsernameAndDeletedFalse(String username);
+    Optional<Student> findByUsernameOrEmailAndDeletedFalse(String username, String email);
 }
