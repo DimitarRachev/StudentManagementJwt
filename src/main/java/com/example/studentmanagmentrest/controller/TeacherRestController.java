@@ -59,6 +59,7 @@ public class TeacherRestController {
 
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('TEACHER', 'MANAGER', 'ADMIN')")
     public ResponseEntity<Page<TeacherDto>> getAll(@RequestParam(defaultValue = "0") int page,
                                                    @RequestParam(defaultValue = "5") int size,
                                                    @RequestParam(defaultValue = "ASC") Sort.Direction order,
